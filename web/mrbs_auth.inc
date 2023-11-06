@@ -68,7 +68,7 @@ function booking_level() : int
     }
   }
 
-  return 1;
+  return 2;
 }
 
 
@@ -91,7 +91,7 @@ function get_page_level($page)
     // read features.
     case 'help.php':
     case 'index.php':
-      $result = 0;
+      $result = 1;
       break;
 
     // These pages reveal usernames, which could be of assistance to someone trying to
@@ -115,7 +115,7 @@ function get_page_level($page)
     case 'pending.php':                 // Ordinary users can view their own entries
     case 'registration_handler.php':    // Ordinary users can register for an event
     case 'usernames.php':               // Ajax page for getting a list of users (booking admins can use this)
-      $result = 1;
+      $result = $max_level;
       break;
 
     // These pages allow users to create and delete entries
@@ -136,7 +136,7 @@ function get_page_level($page)
     case 'import.php':
     case 'kiosk.php':
     case 'report.php':
-      $result = 2;
+      $result = $max_level;
       break;
 
     default:
