@@ -473,6 +473,16 @@ class AuthLdap extends Auth
       $user['display_name'] = $user['username'];
     }
 
+    global $auth;
+    
+    if(in_array($user['username'], $auth['admin'])){
+        $user['level'] = $max_level;
+    }else if(in_array($user['username'], $auth['user'])){
+        $user['level'] = 2;
+    }else{
+        $user['level'] = 1;
+    }
+
     if (isset($user['groups']))
     {
       if (isset($object['config']['ldap_admin_group_dn']))
