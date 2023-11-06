@@ -1,9 +1,23 @@
-<?php // -*-mode: PHP; coding:utf-8;-*-
-namespace MRBS;
+<?php
 
-use IntlDateFormatter;
+$auth["type"] = "ldap";
 
-require_once 'lib/autoload.inc';
+// 'auth_ldap' configuration settings
+// Where is the LDAP server
+$ldap_host = "ldaps://imap.lnl.infn.it";
+// If you have a non-standard LDAP port, you can define it here
+$ldap_port = 636;
+// If you want to use LDAP v3, change the following to true
+$ldap_v3 = false;
+// If you want to use TLS, change following to true
+$ldap_tls = false;
+// LDAP base distinguish name
+// See AUTHENTICATION for details of how check against multiple base dn's
+$ldap_base_dn = "dc=lnl,dc=infn,dc=it";
+// Attribute within the base dn that contains the username
+$ldap_user_attrib = "uid";
+
+// $Id: config.inc.php 2799 2014-01-09 12:44:22Z cimorrison $
 
 /**************************************************************************
  *   MRBS Configuration File
@@ -16,16 +30,12 @@ require_once 'lib/autoload.inc';
  *   or areadefaults.inc.php, then copy the relevant lines into this file
  *   and edit them here.   This file will override the default settings and
  *   when you upgrade to a new version of MRBS the config file is preserved.
- *
- *   NOTE: if you include or require other files from this file, for example
- *   to store your database details in a separate location, then you should
- *   use an absolute and not a relative pathname.
  **************************************************************************/
 
 /**********
  * Timezone
  **********/
-
+ 
 // The timezone your meeting rooms run in. It is especially important
 // to set this if you're using PHP 5 on Linux. In this configuration
 // if you don't, meetings in a different DST than you are currently
@@ -40,16 +50,17 @@ require_once 'lib/autoload.inc';
 //
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
-//$timezone = "Europe/London";
+$timezone = "Europe/Rome";
 
 
 /*******************
  * Database settings
  ******************/
-// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL
-$dbsys = "mysql";
+// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL,
+// "mysqli"=MySQL via the mysqli PHP extension
+$dbsys = "mysqli";
 // Hostname of database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP. For mysql "localhost"
+// to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $db_host = "localhost";
@@ -65,21 +76,33 @@ $db_database = "mrbs";
 // Database login user name:
 $db_login = "mrbs";
 // Database login password:
-$db_password = 'mrbs-password';
+$db_password = 'mrbs';
 // Prefix for table names.  This will allow multiple installations where only
 // one database is available
 $db_tbl_prefix = "mrbs_";
-// Set $db_persist to TRUE to use PHP persistent (pooled) database connections.  Note
-// that persistent connections are not recommended unless your system suffers significant
-// performance problems without them.   They can cause problems with transactions and
-// locks (see http://php.net/manual/en/features.persistent-connections.php) and although
-// MRBS tries to avoid those problems, it is generally better not to use persistent
-// connections if you can.
-$db_persist = false;
+// Uncomment this to NOT use PHP persistent (pooled) database connections:
+// $db_nopersist = 1;
 
 
 /* Add lines from systemdefaults.inc.php and areadefaults.inc.php below here
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
    or areadefaults.inc.php.  */
 
+#define('admin', ['mcamillo']);
 
+
+#$mrbs_admin = "Servizio Tecnologie Informatiche";
+#$mrbs_admin_email = "calcolo@lnl.infn.it";
+
+#$mrbs_company = "INFN LNL";
+#$mrbs_company_url = "http://www.lnl.infn.it";
+
+$auth['deny_public_access'] = TRUE;
+
+$max_level = 3;
+
+unset($auth["admin"]);
+$auth["admin"][] = "127.0.0.1";
+$auth["admin"][] = "admin";
+$auth["admin"][] = "mcamillo";
+$auth["user"][] = "dlupu";
