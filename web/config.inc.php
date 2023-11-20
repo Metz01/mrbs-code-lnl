@@ -17,6 +17,8 @@ $ldap_base_dn = "dc=lnl,dc=infn,dc=it";
 // Attribute within the base dn that contains the username
 $ldap_user_attrib = "uid";
 
+$debug  = true;
+
 // $Id: config.inc.php 2799 2014-01-09 12:44:22Z cimorrison $
 
 /**************************************************************************
