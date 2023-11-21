@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use IntlDateFormatter;
+use MRBS\Intl\IntlDateFormatter;
 
 require_once 'lib/autoload.inc';
 
@@ -726,6 +726,26 @@ $datetime_formats['week_number'] = array(
 );
 
 
+/***************
+ * ICU overrides
+ * *************/
+
+// Sometimes we may want to override the standard ICU library settings,
+// for example if the ICU library on the server is out of date and can't
+// be updated.  This can be done by setting:
+//
+// $icu_override[<locale>]['first_day_of_week'] and/or
+// $icu_override[<locale>]['minimal_days_in_first_week']
+//
+// where <locale> is a valid locale in BCP 47 format and both settings take
+// integer values in the range 1..7 (IntlCalendar days start with Sunday = 1).
+
+// For example:
+//
+// $icu_override['en-AU']['first_day_of_week'] = 2; // Monday
+// $icu_override['en-AU']['minimal_days_in_first_week'] = 1;
+
+
 /************************
  * Miscellaneous settings
  ************************/
@@ -1335,6 +1355,8 @@ $auth['saml']['attr']['mail'] = 'mail';
 $auth['saml']['attr']['givenName'] = 'givenname';
 $auth['saml']['attr']['surname'] = 'sn';
 $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
+// Optional access control filter
+//$auth['saml']['user']['memberOf'] = ['CN=Calendar Users,CN=Users,DC=example,DC=com'];
 // MRBS session initialisation can interfere with session handling in some
 // SAML libraries.  If so, set this to true.
 $auth['saml']['disable_mrbs_session_init'] = false;
