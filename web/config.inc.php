@@ -52,8 +52,6 @@ $ldap_user_attrib = "uid";
 // The following line must be uncommented by removing the '//' at the beginning
 $timezone = "Europe/Rome";
 
-$override_locale = "en.UTF-8";
-
 
 /*******************
  * Database settings
