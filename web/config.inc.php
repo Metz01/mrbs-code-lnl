@@ -100,6 +100,7 @@ $db_tbl_prefix = "mrbs_";
 $auth['deny_public_access'] = TRUE;
 
 $max_level = 3;
+$min_booking_admin_level = 3;
 
 unset($auth["admin"]);
 $auth["admin"][] = "127.0.0.1";
