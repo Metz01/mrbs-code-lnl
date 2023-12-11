@@ -65,10 +65,11 @@ PATH: `web/`
 FILE: `config.inc.php`
 
 Creiamo 2 nuove sezioni come quelle Timezone e DataBase settings prima di queste e dopo le informazioni su MRBS:
-
+```
 /******
  * LDAP
  ******/
+```
 ```
 /************
  * USER ROLES
