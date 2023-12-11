@@ -44,6 +44,7 @@ $auth['deny_public_access'] = TRUE;
 
 $max_level = 3;
 $min_booking_admin_level = 3;
+$min_level_to_book = 2;
 
 unset($auth["admin"]);
 $auth["admin"][] = "mcamillo";
