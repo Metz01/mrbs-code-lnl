@@ -42,7 +42,7 @@ function session()
 // $auth['only_admin_can_book'] and $auth['only_admin_can_book_before']
 function booking_level() : int
 {
-  global $auth;
+  global $auth, $min_level_to_book;
 
   if ($auth['allow_anonymous_booking'])
   {
@@ -68,7 +68,7 @@ function booking_level() : int
     }
   }
 
-  return 2;
+  return $min_level_to_book;
 }
 
 
