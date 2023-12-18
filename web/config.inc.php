@@ -47,8 +47,10 @@ $min_booking_admin_level = 3;
 $min_level_to_book = 2;
 
 unset($auth["admin"]);
-$auth["admin"][] = "mcamillo";
+$auth["user"][] = "mcamillo";
 $auth["user"][] = "dlupu";
+
+$auth["1"][] = "mcamillo";
 
 /**********
  * Timezone

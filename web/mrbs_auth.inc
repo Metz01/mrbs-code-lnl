@@ -315,6 +315,12 @@ function getWritable($creator, $rooms=null, $all=true) : bool
   // Otherwise you have to be a (booking) admin for this room
   if (is_book_admin($rooms))
   {
+    if(isset($auth[$rooms])){
+      if(in_array($mrbs_user, $auth[$rooms])){
+        return true;
+      }
+      return false;
+    }
     return true;
   }
 
