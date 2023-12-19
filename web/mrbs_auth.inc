@@ -305,6 +305,12 @@ function getWritable($creator, $rooms=null, $all=true) : bool
     return false;
   }
 
+  // You can enter this roomif you are a (booking) admin
+  if (is_book_admin($rooms))
+  {
+    return true;
+  }
+
   $mrbs_user = session()->getCurrentUser();
 
   if(isset($auth[$rooms])){
@@ -316,12 +322,6 @@ function getWritable($creator, $rooms=null, $all=true) : bool
 
   // Always allowed to modify your own stuff
   if (isset($mrbs_user) && isset($creator) && (strcasecmp_locale($creator, $mrbs_user->username) === 0))
-  {
-    return true;
-  }
-
-  // Otherwise you have to be a (booking) admin for this room
-  if (is_book_admin($rooms))
   {
     return true;
   }
