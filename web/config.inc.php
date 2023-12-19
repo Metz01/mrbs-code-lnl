@@ -40,10 +40,10 @@ $ldap_user_attrib = "uid";
  * ROOMS
  *******/
 $FORTUNA = "1";
-$VILLI = "2":
+$VILLI = "2";
 $CEOLIN = "3";
 $ROSTAGNI = "11";
-$FORMAZIONE = "12"
+$FORMAZIONE = "12";
 $TANDEM = "13";
 $BIBVANNUCCI = "14";
 $LAE = "15";
