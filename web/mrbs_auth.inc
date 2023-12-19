@@ -305,8 +305,16 @@ function getWritable($creator, $rooms=null, $all=true) : bool
     return false;
   }
 
-  // Always allowed to modify your own stuff
   $mrbs_user = session()->getCurrentUser();
+
+  if(isset($auth[$rooms])){
+   if(in_array($mrbs_user->username, $auth[$rooms])){
+      return true;
+    }
+    return false;
+  }
+
+  // Always allowed to modify your own stuff
   if (isset($mrbs_user) && isset($creator) && (strcasecmp_locale($creator, $mrbs_user->username) === 0))
   {
     return true;
