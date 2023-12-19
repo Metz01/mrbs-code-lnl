@@ -36,6 +36,18 @@ $ldap_base_dn = "dc=lnl,dc=infn,dc=it";
 $ldap_user_attrib = "uid";
 
 
+/*******
+ * ROOMS
+ *******/
+$FORTUNA = "1";
+$VILLI = "2":
+$CEOLIN = "3";
+$ROSTAGNI = "11";
+$FORMAZIONE = "12"
+$TANDEM = "13";
+$BIBVANNUCCI = "14";
+$LAE = "15";
+
 /************
  * USER ROLES
  ************/
@@ -49,6 +61,7 @@ $min_level_to_book = 2;
 unset($auth["admin"]);
 $auth["admin"][] = "mcamillo";
 $auth["user"][] = "dlupu";
+$auth[$FORTUNA][] = "dlupu";
 
 /**********
  * Timezone
