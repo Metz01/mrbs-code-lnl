@@ -311,6 +311,7 @@ function getWritable($creator, $rooms=null, $all=true) : bool
     return true;
   }
 
+  global $auth;
   $mrbs_user = session()->getCurrentUser();
 
   if(isset($auth[$rooms])){
