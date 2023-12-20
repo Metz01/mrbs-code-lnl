@@ -63,7 +63,12 @@ Recommended:
 PATH: `web/`
 FILE: `config.inc.php`
 
-Creiamo 2 nuove sezioni come quelle Timezone e DataBase settings prima di queste e dopo le informazioni su MRBS:
+Creiamo 3 nuove sezioni come quelle Timezone e DataBase settings prima di queste e dopo le informazioni su MRBS:
+```
+/*******
+ * ROOMS
+ *******/
+```
 ```
 /******
  * LDAP
@@ -97,6 +102,19 @@ $ldap_user_attrib = "uid";
 ```
 Questo permette di impostare l'autenticazione al sito tramite LDAP, collegandosi al server LDAP dei laboratori.
 
+### CREAZIONE IDENTIFICATIVI STANZE
+Per permettere una più semplice creazione della lista degli user che possono entrare in stanze private andiamo a scrivere nella sezione `ROOMS` tutte le stanze, presenti nel nostro database, come variabili e ci associamo il valore del loro id:
+```
+$FORTUNA = 1;
+$VILLI = 2;
+$CEOLIN = 3;
+$ROSTAGNI = 11;
+$FORMAZIONE = 12;
+$TANDEM = 13;
+$BIBVANNUCCI = 14;
+$LAE = 15;
+```
+
 ### AUTENTICAZIONE SOLO TRAMITE LOGIN
 Per impostare l'accesso al sito solo tramite login aggiungiamo nella sezione USER ROLES la linea:
 `$auth['deny_public_access'] = TRUE;`
@@ -116,6 +134,7 @@ $min_level_to_book = 2;
 Si ha che `max_level` indica il livello massimo che una persona registrata può ottenere, mentre `min_booking_admin_level`
 indica il livello minimo perchè un utente abbia la possibilità di modificare le prenotazioni anche degli altri. 
 `min_level_to_book`indica il livello minimo che un utente deve avere per poter prenotare uan stanza.
+C'è poi la possibilità di avere delle stanze private il cui accesso è consentito solo ad admin e utenti specificati in questo file.
 
 ### USER ROLES
 Per aggiungere nuovi users alla lista di utenti speciali che possono modificare o creare riunioni la sintassi è:
@@ -127,6 +146,14 @@ I casi classici di `role_name` sono:
 Tutti gli user che non rientrano in nessuna di queste liste (e che quindi non sono specificati nel file di config
 ma sono registrati nel server LDAP) sono considerati spettatori, ovvero possono solo vedere le prenotazioni che sono
 state effettuate dagli altri users.
+
+### CREAZIONE E ACCESSO STANZE PRIVATE
+Per rendere una stanza, già esistente, privata, ci basterà aggiungere nella sezione `USER ROLES` una linea di codice del tipo:
+`$auth[$NOMESTANZA][] = "usernameUtente";`
+
+In questo modo, con `$auth[$NOMESTANZA]`, sarà creata una nuova entry nell'array `$auth` e sarà identificato con l'id della stanza (Il quale è stato specificato nella sezione `ROOMS`). 
+Invece con le seconde `[]` si sta dicendo di aggiungere in coda lo `usernameUtente` all'interno della entry a posizione `$NOMESTANZA` (che a sua volta è un array) dell'array `$auth`.
+In questo modo la stanza sarà stata privatizzata e potranno accederci (creare e modificare eventi) solamente gli user indicati in questo modo.
 
 ### TIMEZONE
 $timezone = "Europe/Rome";
@@ -163,6 +190,28 @@ if(in_array($user['username'], $auth['admin'])){
 ## MODIFICHE FILE LIVELLI DI ACCESSO
 PATH: `web/`
 FILE: `mrbs_auth.inc`
+
+### ACCESSO STANZE PRIVATE
+Per permettere l'accesso alle stanze dichiarate private nel file `config` si dovrà andare nel metodo `getWritable($creator, $rooms=null, $all=true)` ed aggiungere il seguente snippet:
+```
+global $auth;
+$mrbs_user = session()->getCurrentUser();
+
+if(isset($auth[$rooms])){
+ if(in_array($mrbs_user->username, $auth[$rooms])){
+    return true;
+  }
+  return false;
+}
+```
+Va inserito prima del controllo per verificare se si sta modificando qualcosa di proprio (`if (isset($mrbs_user) && ...)`).
+Questo darà un admin-like role agli utenti che sono stati dichiarati per una specifica stanza nel file di `config`. Se si vuole che questi utenti possano modificare solo le proprie entry in quelle stanze allora basterà aggiungere:
+```
+if (isset($mrbs_user) && isset($creator) && (strcasecmp_locale($creator, $mrbs_user->username) === 0)){
+  return true;
+}
+```
+al posto del `return true` nel snippet aggiunto in precedenza.
 
 ### LIVELLO MINIMO PER PRENOTARE
 Per modificare il livello minimo per prenotare una stanza dobbiamo modificare la funzione `booking_level()`:
