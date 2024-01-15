@@ -59,8 +59,20 @@ $min_booking_admin_level = 3;
 $min_level_to_book = 2;
 
 $auth["admin"][] = "mcamillo";
-$auth["user"][] = "dlupu";
-$auth[$FORTUNA][] = "dlupu";
+$auth["admin"][] = "dlupu";
+$auth["admin"][] = "gulmini";
+$auth["admin"][] = "biasotto";
+$auth["admin"][] = "fantinel";
+$auth["admin"][] = "toniolo";
+$auth["admin"][] = "roetta";
+$auth["admin"][] = "marcato";
+$auth["user"][] = "carraret";
+$auth[$FORTUNA][] = "carraret";
+$auth["user"][] = "polato";
+$auth["user"][] = "deste";
+$auth["user"][] = "sartor";
+$auth["user"][] = "zane";
+$auth["user"][] = "martin";
 
 /**********
  * Timezone
