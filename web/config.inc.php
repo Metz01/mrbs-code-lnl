@@ -18,22 +18,12 @@
  * LDAP
  ******/
 
-$auth["type"] = "ldap";
-
-// 'auth_ldap' configuration settings
-// Where is the LDAP server
-$ldap_host = "ldaps://imap.lnl.infn.it";
-// If you have a non-standard LDAP port, you can define it here
-$ldap_port = 636;
-// If you want to use LDAP v3, change the following to true
-$ldap_v3 = false;
-// If you want to use TLS, change following to true
-$ldap_tls = false;
-// LDAP base distinguish name
-// See AUTHENTICATION for details of how check against multiple base dn's
-$ldap_base_dn = "dc=lnl,dc=infn,dc=it";
-// Attribute within the base dn that contains the username
-$ldap_user_attrib = "uid";
+$auth["type"] = "saml";
+$auth['session'] = 'saml';
+$auth['saml']['ssp_path'] = '/var/simplesamlphp';
+$auth['saml']['authsource'] = 'infn-AAI-test';
+$auth['saml']['attr']['username'] = 'uid';
+$auth['saml']['admin']['memberOf'] = ['DC=infn,DC=it'];
 
 
 /*******
