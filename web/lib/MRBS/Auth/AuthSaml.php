@@ -80,10 +80,20 @@ class AuthSaml extends Auth
    */
   private function getLevel(string $username) : int
   {
-    global $auth;
+    global $auth, $max_level;
 
     $userData = \MRBS\session()->ssp->getAttributes();
     $current_username = \MRBS\session()->getUsername();
+    if (isset($current_username))
+      {
+      if(in_array($current_username, $auth['admin'])){
+          $user['level'] = $max_level;
+      }else if(in_array($current_username, $auth['user'])){
+          $user['level'] = 2;
+      }else{
+          $user['level'] = 1;
+      }
+    }
 
     if (isset($current_username) && $current_username === $username)
     {
