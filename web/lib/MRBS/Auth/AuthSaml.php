@@ -87,11 +87,11 @@ class AuthSaml extends Auth
     if (isset($current_username))
       {
       if(in_array($current_username, $auth['admin'])){
-          $user['level'] = $max_level;
+          return $max_level;
       }else if(in_array($current_username, $auth['user'])){
-          $user['level'] = 2;
+          return 2;
       }else{
-          $user['level'] = 1;
+          return 1;
       }
     }
 
