@@ -21,7 +21,7 @@
 $auth["type"] = "saml";
 $auth['session'] = 'saml';
 $auth['saml']['ssp_path'] = '/var/simplesamlphp';
-$auth['saml']['authsource'] = 'infn-AAI-test';
+$auth['saml']['authsource'] = 'infn-AAI';
 $auth['saml']['attr']['username'] = 'uid';
 $auth['saml']['admin']['memberOf'] = ['DC=infn,DC=it'];
 
