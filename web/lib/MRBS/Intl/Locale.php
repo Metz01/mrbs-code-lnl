@@ -10,7 +10,7 @@ namespace MRBS\Intl;
 // If \Locale were working properly then one possibility would be to add conditional code as for the
 // other MRBS\Intl classes, do that the emulation is only a fallback if the PHP class doesn't exist eg
 /*
-if (class_exists('\Locale'))
+if (class_exists('\Locale') && extension_loaded('intl'))
 {
   class Locale extends \Locale
   {
@@ -39,6 +39,8 @@ class Locale
   const VARIANT_TAG            = 'variant';
   const GRANDFATHERED_LANG_TAG = 'grandfathered';
   const PRIVATE_TAG            = 'private';
+  const ACTUAL_LOCALE = 0;
+  const VALID_LOCALE = 1;
 
 
   // Tries to find out best available locale based on HTTP "Accept-Language" header

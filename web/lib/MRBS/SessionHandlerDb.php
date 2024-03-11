@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS;
 
 use PDOException;
@@ -102,13 +102,13 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
                WHERE id=:id
                LIMIT 1";
 
-      $result = db()->query1($sql, array(':id' => $id));
+      $result = db()->query_scalar_non_bool($sql, array(':id' => $id));
     }
     catch (DBException $e)
     {
       // If the exception is because the sessions table doesn't exist, then that's
       // probably because we're in the middle of the upgrade that creates the
-      // sessions table, so just ignore it and return ''.   Otherwise re-throw
+      // sessions table, so just ignore it and return ''.   Otherwise, re-throw
       // the exception.
       if (!db()->table_exists(self::$table))
       {
@@ -117,7 +117,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       throw $e;
     }
 
-    if (!isset($result) || ($result === -1))
+    if (!isset($result) || ($result === false))
     {
       return '';
     }
@@ -164,6 +164,11 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     $sql_params = array();
     $sql = db()->syntax_upsert($query_data, self::$table, $sql_params, 'id');
 
+    // From the MySQL manual:
+    // "With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row is inserted as a
+    // new row, 2 if an existing row is updated, and 0 if an existing row is set to its current values.
+    // If you specify the CLIENT_FOUND_ROWS flag to the mysql_real_connect() C API function when connecting
+    // to mysqld, the affected-rows value is 1 (not 0) if an existing row is set to its current values."
     return (0 < db()->command($sql, $sql_params));
   }
 

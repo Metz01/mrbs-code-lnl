@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Gets the standard variables of $day, $month, $year, $area and $room
@@ -31,7 +32,7 @@ if (empty($room))
 // the normal view (with time slots) instead
 if (($view != 'day') && !$always_offer_view_all & count(get_rooms($area)) == 1)
 {
-  $view_all = false;
+  $view_all = 0;
 }
 
 // Get the settings (resolution, etc.) for this area

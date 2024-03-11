@@ -202,9 +202,9 @@ class DB_mysql extends DB
   // Must be called right after an insert on that table!
   //
   // For MySQL we don't need to refer to the passed $table or $field
-  public function insert_id(string $table, string $field)
+  public function insert_id(string $table, string $field): int
   {
-    return $this->dbh->lastInsertId();
+    return (int)$this->dbh->lastInsertId();
   }
 
 
@@ -212,7 +212,7 @@ class DB_mysql extends DB
   // This method should not be called for the first time while
   // locks are in place, because it will release them.
   // WARNING! This method should not be used as RELEASE_ALL_LOCKS
-  //  is not supportedby MariaDB Galera Cluster.
+  //  is not supported by MariaDB Galera Cluster.
   public function supportsMultipleLocks() : bool
   {
     if (!isset($this->supports_multiple_locks))
@@ -427,6 +427,11 @@ class DB_mysql extends DB
       {
         $this->db_type = self::DB_PERCONA;
       }
+      // The Altervista.org hosting platform will give this version comment
+      elseif ($this->versionComment() == 'Source distribution')
+      {
+        $this->db_type = self::DB_MYSQL;
+      }
       else
       {
         if ($debug)
@@ -495,9 +500,9 @@ class DB_mysql extends DB
   // Check if a table exists
   public function table_exists(string $table) : bool
   {
-    $res = $this->query1("SHOW TABLES LIKE ?", array($table));
+    $res = $this->query("SHOW TABLES LIKE ?", array($table));
 
-    return !($res == -1);
+    return ($res->count() > 0);
   }
 
 

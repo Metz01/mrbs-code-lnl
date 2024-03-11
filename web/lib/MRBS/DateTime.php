@@ -161,6 +161,12 @@ class DateTime extends \DateTime
   }
 
 
+  public function getHour() : int
+  {
+    return intval($this->format('G'));
+  }
+
+
   public function getDay() : int
   {
     return intval($this->format('j'));
@@ -399,7 +405,7 @@ class DateTime extends \DateTime
 
   public function isWeekend() : bool
   {
-    return is_weekend($this->format('w'));
+    return is_weekend(intval($this->format('w')));
   }
 
 

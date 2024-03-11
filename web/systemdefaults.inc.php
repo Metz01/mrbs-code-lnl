@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use MRBS\Intl\IntlDateFormatter;
+use IntlDateFormatter;
 
 require_once 'lib/autoload.inc';
 
@@ -328,9 +328,18 @@ $min_booking_date = "2012-04-23";  // Must be a string in the format "yyyy-mm-dd
 // min and max delete ahead settings.
 $approved_bookings_cannot_be_changed = false;
 
-// Set this to true if you want to prevent users having a booking for two different rooms
+// Set this to true if you want to prevent users having a booking for multiple rooms
 // at the same time.
 $prevent_simultaneous_bookings = false;
+
+// The maximum number of simultaneous bookings allowed if $prevent_simultaneous_bookings is true.
+$max_simultaneous_bookings = 1;
+
+// Whether to count simultaneous bookings just in the area concerned (true), or globally (false).
+// NOTE: it only makes sense to count globally if all the enabled areas are in "times" mode; or
+// they are in "periods" mode and the periods in each area correspond to the same time; or there
+// is only one area.
+$simultaneous_ignore_other_areas = false;
 
 // Set this to true if you want to prevent bookings of a type that is invalid for a room
 $prevent_invalid_types = true;
@@ -577,6 +586,12 @@ $state_duration = 0;
 // Whether to sort users by their last names or not
 $sort_users_by_last_name = false;
 
+// When viewing all rooms in the week or month views, it can be very difficult to pick out an individual
+// slot, which could be just one pixel wide.  Therefore, the user is taken to the day view first unless
+// there's only one slot per day.  If $view_all_always_go_to_day_view is set to true, then we always go to
+// the day view first, regardless of the number of slots.
+$view_all_always_go_to_day_view = false;
+
 
 /***********************
  * Date and time formats
@@ -665,6 +680,14 @@ $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
 );
 
+// The format for ranges with both dates and times
+// Note: this setting only accepts 'date_type' and 'time_type' keys
+// and ignores 'pattern' and 'skeleton' keys.
+$datetime_formats['range_datetime'] = array(
+  'date_type' => IntlDateFormatter::MEDIUM,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
 // The format used for times
 $datetime_formats['time'] = array(
   'date_type' => IntlDateFormatter::NONE,
@@ -700,22 +723,10 @@ $datetime_formats['view_week_day_date_month'] = array(
   'pattern' => 'EEE, MMM d'
 );
 
-// The title of the week view calendar when the years and
-// months are the same for the start and end of the week
-$datetime_formats['view_week_date'] = array(
-  'skeleton' => 'd',
-  'pattern' => 'd'
-);
-
-// The title of the week view calendar when just the years
-// are the same for the start and end of the week
-$datetime_formats['view_week_month'] = array(
-  'skeleton' => 'dMMMM',
-  'pattern' => 'MMMM d'
-);
-
-// The title of the week view calendar (end of the week)
-$datetime_formats['view_week_year'] = array(
+// The title of the week view calendar
+// Note: this setting only accepts 'date_type' and 'time_type' keys
+// and ignores 'pattern' and 'skeleton' keys.
+$datetime_formats['view_week'] = array(
   'date_type' => IntlDateFormatter::LONG,
   'time_type' => IntlDateFormatter::NONE
 );
@@ -724,6 +735,11 @@ $datetime_formats['view_week_year'] = array(
 $datetime_formats['week_number'] = array(
   'pattern' => 'w'
 );
+
+// Sometimes if the server's ICU library is out of date and cannot easily be updated
+// it can be better to use the IntlDateFormatter emulation and strftime(), even if the
+// 'intl' extension is installed.  To do this set the variable below to true.
+$force_srtftime = false;
 
 
 /***************
@@ -1046,7 +1062,7 @@ $auth["session_php"]["inactivity_expire_time"] = 0; // seconds
 // for whom admin rights are defined here.   After that this list is ignored.
 unset($auth["admin"]);              // Include this when copying to config.inc.php
 $auth["admin"][] = "127.0.0.1";     // localhost IP address. Useful with IP sessions.
-$auth["admin"][] = "administrator"; // A user name from the user list. Useful
+$auth["admin"][] = "administrator"; // A username from the user list. Useful
                                     // with most other session schemes.
 //$auth["admin"][] = "10.0.0.1";
 //$auth["admin"][] = "10.0.0.2";
@@ -1118,7 +1134,7 @@ $auth['cas']['no_server_validation'] = false;
 // Filtering by attribute
 // The next two settings allow you to use CAS attributes to require that a user must have certain
 // attributes, otherwise their access level will be zero.  In other words unless they ahave the required
-// attributes they will be able to login successfully, but then won't have any more rights than an
+// attributes they will be able to log in successfully, but then won't have any more rights than an
 // unlogged in user.
 // $auth['cas']['filter_attr_name'] = ''; // eg 'department'
 // $auth['cas']['filter_attr_values'] = ''; // eg 'DEPT01', or else an array, eg array('DEPT01', 'DEPT02');
