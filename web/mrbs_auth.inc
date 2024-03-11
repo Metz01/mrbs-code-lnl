@@ -42,7 +42,7 @@ function session()
 // $auth['only_admin_can_book'] and $auth['only_admin_can_book_before']
 function booking_level() : int
 {
-  global $auth, $min_level_to_book;
+  global $auth, $min_level_to_book, $max_level;
 
   if ($auth['allow_anonymous_booking'])
   {
@@ -51,7 +51,7 @@ function booking_level() : int
 
   if ($auth['only_admin_can_book'])
   {
-    return 2;
+    return $max_level;
   }
   elseif ($auth['only_admin_can_book_before'])
   {
@@ -60,11 +60,11 @@ function booking_level() : int
     {
       $message = "Could not calculate time from '" . $auth['only_admin_can_book_before'] . "'.";
       trigger_error($message);
-      return 2;
+      return $max_level;
     }
     else
     {
-      return (time() >= $go_live) ? 1 : 2;
+      return (time() >= $go_live) ? 1 : $min_level_to_book;
     }
   }
 
