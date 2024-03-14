@@ -38,6 +38,8 @@ function print_head(bool $simple=false) : void
 
   echo "<meta name=\"robots\" content=\"noindex, nofollow, noarchive\">\n";
 
+  echo "<link rel=\"icon\" type=\"image/x-icon\" href=\"images/favicon.png\">";
+
   if (($refresh_rate != 0) && (this_page(false, '.php') == 'index'))
   {
     // If we're using JavaScript we'll do the refresh by getting a new
