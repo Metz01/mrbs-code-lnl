@@ -57,12 +57,21 @@ $auth["admin"][] = "toniolo";
 $auth["admin"][] = "roetta";
 $auth["admin"][] = "marcato";
 $auth["user"][] = "carraret";
-$auth[$FORTUNA][] = "carraret";
 $auth["user"][] = "polato";
 $auth["user"][] = "deste";
 $auth["user"][] = "sartor";
 $auth["user"][] = "zane";
 $auth["user"][] = "martin";
+$auth["user"][] = "agozzelin";
+$auth["user"][] = "lpegorar";
+$auth["user"][] = "sturaro";
+$auth["user"][] = "clfornaro";
+$auth["user"][] = "spezzin";
+$auth["user"][] = "tonello";
+$auth[$FORTUNA][] = "carraret";
+$auth[$FORTUNA][] = "sturaro";
+$auth[$FORTUNA][] = "clfornaro";
+$auth[$FORTUNA][] = "spezzin";
 
 /**********
  * Timezone
